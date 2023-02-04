@@ -39,6 +39,18 @@ For Raspberry Pi:
 source my-venv/bin/activate
 ```
 
+You also need to install Qt5 using apt package manager in Raspberry Pi.
+
+```
+sudo apt install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
+```
+
+- Install the required Python packages.
+
+```
+pip install -r requirements.txt
+```
+
 - Change directory to `app` folder and run `main.py`.
 
 For Windows
