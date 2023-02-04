@@ -1,19 +1,23 @@
 import sys
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.uic import loadUi
-from ObjectDetection import ObjectDetection
+from object_detection import ObjectDetection
 
 IN_RPI = False
 try:
     import RPi.GPIO
 
     IN_RPI = True
-except Exception as e:
+except ImportError as e:
     print(str(e))
-    print("Not in Raspberry Pi")
+    print("Not in Raspberry Pi.")
 
 
 class MainWindow(QtWidgets.QMainWindow):
+    """
+    Class for GUI related controls in mainwindow.ui.
+    """
+
     def __init__(self):
         super(MainWindow, self).__init__()
         loadUi("mainwindow.ui", self)
@@ -41,39 +45,44 @@ class MainWindow(QtWidgets.QMainWindow):
         self.timer.start(1)
 
     def capture_button_clicked(self):
+        """Stops the timer when the capture button is clicked."""
         if not self.is_captured:
             self.is_captured = True
             self.timer.stop()
 
     def reset_button_clicked(self):
+        """Starts the timer when the reset button is clicked."""
         if self.is_captured:
             self.is_captured = False
             self.timer.start(1)
 
     def update_frames(self):
+        """
+        Timer that continuously get frames from the camera.
+        """
         image = self.object_detection.get_frames()
 
         # If there is only 2 items in shape, it means the
         # image is one channel.
         if len(image.shape) == 2:
-            imageFormat = QtGui.QImage.Format_Indexed8
-        # Else, it may be 3 or 4
+            image_format = QtGui.QImage.Format_Indexed8
+        # Else, it may be 3 or 4.
         else:
             # Get third item which is the number of channels.
             num_channels = image.shape[2]
             if num_channels == 1:
-                imageFormat = QtGui.QImage.Format_Indexed8
+                image_format = QtGui.QImage.Format_Indexed8
             elif num_channels == 3:
-                imageFormat = QtGui.QImage.Format_RGB888
+                image_format = QtGui.QImage.Format_RGB888
             elif num_channels == 4:
-                imageFormat = QtGui.QImage.Format_RGBA8888
+                image_format = QtGui.QImage.Format_RGBA8888
 
         out_image = QtGui.QImage(
             image,
             image.shape[1],
             image.shape[0],
             image.strides[0],
-            imageFormat,
+            image_format,
         )
 
         self.image_label.setPixmap(QtGui.QPixmap.fromImage(out_image))
