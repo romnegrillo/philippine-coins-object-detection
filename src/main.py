@@ -4,16 +4,6 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.uic import loadUi
 from object_detection import ObjectDetection
 
-IN_RPI = False
-try:
-    import RPi.GPIO
-
-    IN_RPI = True
-except ImportError as e:
-    print(str(e))
-    print("Not in Raspberry Pi.")
-
-
 class MainWindow(QtWidgets.QMainWindow):
     """
     Class for GUI related controls in mainwindow.ui.
@@ -26,17 +16,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.capture_button.clicked.connect(self.capture_button_clicked)
         self.reset_button.clicked.connect(self.reset_button_clicked)
 
-        if IN_RPI:
-            use_rpi_cam = True
-            self.showFullScreen()
-        else:
-            use_rpi_cam = False
-
         self.object_detection = ObjectDetection(
             config_path="yolov4-tiny-custom.cfg",
             weights_path="yolov4-tiny-custom_best.weights",
             classes=["1 pesos", "5 pesos"],
-            use_rpi_cam=use_rpi_cam,
+            use_rpi_cam=False,
         )
 
         self.is_captured = False

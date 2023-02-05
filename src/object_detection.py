@@ -1,14 +1,6 @@
 import numpy as np
 import cv2
 
-try:
-    from picamera import PiCamera
-    from picamera.array import PiRGBArray
-except ImportError as exp:
-    print(str(exp))
-    print("Not in Raspberry Pi.")
-
-
 class ObjectDetection:
     """Class used to load the deep learning model and perform detections."""
 
@@ -60,7 +52,7 @@ class ObjectDetection:
 
         # In BGR format.
         img = self.frame.copy()
-        img = cv2.flip(img, 1)
+        #img = cv2.flip(img, 1)
 
         if self.use_rpi_cam:
             self.raw_capture.truncate(0)
