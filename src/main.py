@@ -4,6 +4,13 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.uic import loadUi
 from object_detection import ObjectDetection
 
+IN_RPI = False
+try:
+    import RPi.GPIO
+    IN_RPI = True
+except ImportError as e:
+    print("Not in Raspberry Pi.")
+
 class MainWindow(QtWidgets.QMainWindow):
     """
     Class for GUI related controls in mainwindow.ui.
@@ -24,6 +31,9 @@ class MainWindow(QtWidgets.QMainWindow):
         )
 
         self.is_captured = False
+
+        if IN_RPI:
+            self.showFullScreen()
 
         self.timer = QtCore.QTimer(self)
         self.timer.timeout.connect(self.update_frames)

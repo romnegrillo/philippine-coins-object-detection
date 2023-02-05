@@ -11,5 +11,6 @@ platformdirs==2.6.2
 pycodestyle==2.10.0
 PyQt5==5.15.8
 PyQt5-sip==12.11.1
+RPi.GPIO==0.7.1
 tomli==2.0.1
 typing_extensions==4.4.0
