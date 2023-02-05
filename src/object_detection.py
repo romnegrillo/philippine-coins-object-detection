@@ -20,7 +20,7 @@ class ObjectDetection:
         config, weights and the classes labels. It also needs if we will use
         the Raspberry Pi camera or USB camera.
         """
-        # For selection what web cam to use.
+        # For selection what web cam to use and if detection will be enabled.
         self.use_rpi_cam = use_rpi_cam
 
         # YOLO paths.
@@ -29,11 +29,12 @@ class ObjectDetection:
         self.classes = classes
 
         # YOLO objects.
-        # self.yolo = cv2.dnn.readNet(weights_path, config_path)
-        # self.layer_names = self.yolo.getLayerNames()
-        # self.output_layers = [
-        #     self.layer_names[i - 1] for i in self.yolo.getUnconnectedOutLayers()
-        # ]
+        self.yolo = cv2.dnn.readNet(self.weights_path, self.config_path)
+        self.layer_names = self.yolo.getLayerNames()
+
+        self.output_layers = [
+            self.layer_names[i - 1] for i in self.yolo.getUnconnectedOutLayers()
+        ]
 
         self.frame = None
 
@@ -60,7 +61,6 @@ class ObjectDetection:
         # In BGR format.
         img = self.frame.copy()
         img = cv2.flip(img, 1)
-        # output = self.detect_image(img)
 
         if self.use_rpi_cam:
             self.raw_capture.truncate(0)
@@ -72,13 +72,13 @@ class ObjectDetection:
         Accepts a image in OpenCV format and runs the detection
         algorithm. Returns the new image with detected objects.
         """
-        height, width, _ = img.shape
 
+        height, width, _ = img.shape
         blob = cv2.dnn.blobFromImage(
             img, 1 / 255.0, (416, 416), swapRB=True, crop=False
         )
         self.yolo.setInput(blob)
-        outputs = self.yolo.forwards(self.output_layers)
+        outputs = self.yolo.forward(self.output_layers)
 
         class_ids = []
         confidences = []
@@ -103,11 +103,26 @@ class ObjectDetection:
                     class_ids.append(class_id)
 
         indices = cv2.dnn.NMSBoxes(boxes, confidences, 0.1, 0.1)
+        num_one_pesos = 0
+        num_five_pesos = 0
+        num_ten_pesos = 0
+        num_twenty_pesos = 0
 
         for i in range(len(boxes)):
             if i in indices:
                 x, y, w, h = boxes[i]
+
                 label = str(self.classes[class_ids[i]])
+
+                if label == self.classes[0]:
+                    num_one_pesos += 1
+                elif label == self.classes[1]:
+                    num_five_pesos += 1
+                elif label == self.classes[2]:
+                    num_ten_pesos += 1
+                elif label == self.classes[3]:
+                    num_twenty_pesos += 1
+
                 start = (x, y)
                 end = (x + w, y + h)
 
@@ -115,14 +130,20 @@ class ObjectDetection:
                 cv2.putText(
                     img,
                     label,
-                    (x, y - 20),
+                    (x, y - 10),
                     cv2.FONT_HERSHEY_PLAIN,
-                    1,
+                    2,
                     (0, 0, 255),
                     2
                 )
 
-        return img
+        return (
+            cv2.cvtColor(img, cv2.COLOR_BGR2RGB),
+            num_one_pesos,
+            num_five_pesos,
+            num_ten_pesos,
+            num_twenty_pesos
+        )
 
     def close_cam(self):
         """
