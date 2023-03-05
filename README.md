@@ -1,12 +1,11 @@
 # Philippine Coins Object Detection
 
-Project from Mapua to detect and count the number of the new Philippine coins using computer vision ported in Raspberry Pi.
-
-This repository contains only the files needed for darknet YOLO tiny v4 training and the final program with the PyQt5 interface. It doesn't contain the full setup of the darknet.
+Computer vision project from Mapua to detect and count the number of the new Philippine coins (1, 5, 10, and 20 pesos) with desktop application ported in Raspberry Pi.
 
 ## Languages and Tools Used
 
 - Python
+- OpenCV
 - Darknet YOLO tiny v4
 - PyQt5
 - Raspberry Pi 4
