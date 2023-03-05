@@ -1,6 +1,8 @@
-# Thesis PH Coin Detection
+# Philippine Coins Object Detection
 
-Thesis project from Mapua to detect and count the number of the new Philippine coins using computer vision. This repository contains only the files needed for darknet YOLO tiny v4 training and the final program with PyQt5 interface. It doesn't contain the full setup of the darknet.
+Project from Mapua to detect and count the number of the new Philippine coins using computer vision ported in Raspberry Pi.
+
+This repository contains only the files needed for darknet YOLO tiny v4 training and the final program with the PyQt5 interface. It doesn't contain the full setup of the darknet.
 
 ## Languages and Tools Used
 
@@ -8,6 +10,9 @@ Thesis project from Mapua to detect and count the number of the new Philippine c
 - Darknet YOLO tiny v4
 - PyQt5
 - Raspberry Pi 4
+
+![Sample Detection](sample_detection.png)
+![Sample GUI](sample_gui.png)
 
 ## Setup on Windows and Raspberry Pi
 
@@ -47,8 +52,16 @@ sudo apt install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
 
 - Install the required Python packages.
 
+For Windows:
+
 ```
-pip install -r requirements.txt
+pip install -r requirements_windows.txt
+```
+
+For Raspberry Pi:
+
+```
+pip install -r requirements_raspberry_pi.txt
 ```
 
 - Change directory to `app` folder and run `main.py`.
@@ -65,8 +78,4 @@ For Linux/Raspberry Pi:
 python3 main.py
 ```
 
-The program `main.py` will automatically detects if you are on Windows or Raspberry Pi. If you are on Windows, the program will expect a built-in camera or USB camera to be connected. If you are on Raspberry Pi, it will expect a Raspberry Pi camera to be connected.
-
-## How to Train?
-
-Fill later.
+The program will use the default webcam on your computer or Raspberry Pi that it is connected to. It is also compatible with Pi Camera as well.

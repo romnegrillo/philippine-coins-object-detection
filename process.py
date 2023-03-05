@@ -1,4 +1,5 @@
-import glob, os
+import glob
+import os
 
 # Current directory
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -8,7 +9,7 @@ print(current_dir)
 current_dir = 'data/obj'
 
 # Percentage of images to be used for the test set
-percentage_test = 10;
+percentage_test = 20
 
 # Create and/or truncate train.txt and test.txt
 file_train = open('data/train.txt', 'w')

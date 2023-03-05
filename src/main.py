@@ -1,7 +1,10 @@
 import sys
-import time
+import os
+from pathlib import Path
+
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.uic import loadUi
+
 from object_detection import ObjectDetection
 
 IN_RPI = False
@@ -11,6 +14,7 @@ try:
 except ImportError as e:
     print("Not in Raspberry Pi.")
 
+
 class MainWindow(QtWidgets.QMainWindow):
     """
     Class for GUI related controls in mainwindow.ui.
@@ -18,16 +22,16 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self):
         super(MainWindow, self).__init__()
-        loadUi("mainwindow.ui", self)
+        loadUi(os.path.join(os.getcwd(), "mainwindow.ui"), self)
 
         self.capture_button.clicked.connect(self.capture_button_clicked)
         self.reset_button.clicked.connect(self.reset_button_clicked)
 
         self.object_detection = ObjectDetection(
-            config_path="yolov4-tiny-custom.cfg",
-            weights_path="yolov4-tiny-custom_best.weights",
-            classes=["1 pesos", "5 pesos"],
-            use_rpi_cam=False,
+            config_path=str(Path.cwd() / "../yolov4-tiny-custom.cfg"),
+            weights_path=str(
+                Path.cwd() / "../training/yolov4-tiny-custom_best.weights"),
+            classes=["5 pesos", "10 pesos", "20 pesos", "1 peso"],
         )
 
         self.is_captured = False
@@ -49,7 +53,6 @@ class MainWindow(QtWidgets.QMainWindow):
         if not self.is_captured:
             self.is_captured = True
             self.timer.stop()
-
             self.update_frames()
 
     def reset_button_clicked(self):
@@ -98,7 +101,7 @@ class MainWindow(QtWidgets.QMainWindow):
             if num_channels == 1:
                 image_format = QtGui.QImage.Format_Indexed8
             elif num_channels == 3:
-                image_format = QtGui.QImage.Format_RGB888
+                image_format = QtGui.QImage.Format_BGR888
             elif num_channels == 4:
                 image_format = QtGui.QImage.Format_RGBA8888
 
